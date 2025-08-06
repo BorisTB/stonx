@@ -2,5 +2,6 @@
   "extends": "./tsconfig.base.json",
   "compileOnSave": false,
   "files": [],
-  "references": []
+  "references": [],
+  "exclude": ["node_modules", "tmp"]
 }

@@ -1,20 +1,59 @@
 {
   "name": "@stonx/source",
   "version": "0.0.0",
+  "author": "BorisTB",
   "license": "MIT",
-  "scripts": {},
   "private": true,
+  "scripts": {
+    "build": "nx run-many --target build --parallel 8",
+    "commit": "czg",
+    "check-commit": "node ./scripts/commit-lint.js",
+    "check-format": "nx format:check --all",
+    "check-format:quick": "pretty-quick --check",
+    "check-lock-files": "node ./scripts/check-lock-files.js",
+    "local-registry": "nx local-registry @stonx/source",
+    "submit-plugin": "node ./scripts/submit-plugin.js",
+    "prepare": "is-ci || husky",
+    "preinstall": "node ./scripts/preinstall.js",
+    "test": "nx run-many -t test",
+    "e2e": "nx run-many -t e2e --projects ./e2e/*",
+    "lint-pnpm-lock": "eslint pnpm-lock.yaml"
+  },
   "devDependencies": {
+    "@nx/jest": "21.3.11",
     "@nx/js": "21.3.11",
     "@nx/plugin": "21.3.11",
     "@nx/workspace": "21.3.11",
     "@swc-node/register": "~1.9.1",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
+    "cz-git": "1.12.0",
+    "czg": "1.12.0",
+    "fast-glob": "3.3.3",
+    "husky": "9.1.7",
+    "is-ci": "4.1.0",
+    "jest": "^30.0.2",
     "nx": "21.3.11",
-    "prettier": "^2.6.2",
+    "prettier": "3.6.2",
+    "pretty-quick": "4.2.2",
+    "semver": "7.7.2",
     "tslib": "^2.3.0",
     "typescript": "~5.8.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-git",
+      "czConfig": "./scripts/commitizen.js"
+    }
+  },
+  "nx": {
+    "includedScripts": [
+      "lint-pnpm-lock",
+      "check-commit",
+      "check-format",
+      "check-format:quick",
+      "check-lock-files"
+    ]
   },
   "packageManager": "pnpm@10.13.1"
 }

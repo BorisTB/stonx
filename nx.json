@@ -2,10 +2,86 @@
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
-    "production": ["default"],
-    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+    "production": [
+      "default",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/.storybook/**/*",
+      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
+      "!{projectRoot}/tsconfig.storybook.json",
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/test-setup.[jt]s"
+    ],
+    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"],
+    "e2eInputs": [
+      "default",
+      "{workspaceRoot}/jest.preset.js",
+      "{workspaceRoot}/.verdaccio/config.yml",
+      "{workspaceRoot}/scripts/local-registry/**/*",
+      "{workspaceRoot}/scripts/nx-release.ts",
+      {
+        "env": "SELECTED_CLI"
+      },
+      {
+        "env": "SELECTED_PM"
+      },
+      {
+        "env": "NX_E2E_CI_CACHE_KEY"
+      },
+      {
+        "env": "CI"
+      },
+      {
+        "env": "NX_E2E_RUN_E2E"
+      }
+    ]
   },
-  "nxCloudId": "68932bc88bb419546bfe6c37",
+  "release": {
+    "projects": ["packages/*"],
+    "releaseTagPattern": "{version}",
+    "changelog": {
+      "workspaceChangelog": {
+        "createRelease": "github",
+        "file": false
+      },
+      "git": {
+        "commit": false,
+        "stageChanges": false,
+        "tag": false
+      }
+    },
+    "version": {
+      "git": {
+        "commit": false,
+        "stageChanges": false,
+        "tag": false
+      },
+      "currentVersionResolver": "registry",
+      "preserveLocalDependencyProtocols": false,
+      "manifestRootsToUpdate": ["dist/packages/{projectName}"]
+    }
+  },
+  "targetDefaults": {
+    "cleanup-tsconfig": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node ./scripts/cleanup-tsconfig-files.js dist/packages/{projectName}"
+      }
+    },
+    "nx-release-publish": {
+      "options": {
+        "packageRoot": "dist/packages/{projectName}"
+      }
+    },
+    "build": {
+      "dependsOn": ["^build", "typecheck"],
+      "inputs": ["production", "^production"],
+      "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
+      "cache": true
+    }
+  },
   "plugins": [
     {
       "plugin": "@nx/js/typescript",
@@ -20,6 +96,17 @@
           "watchDepsName": "watch-deps"
         }
       }
+    },
+    {
+      "plugin": "@nx/jest/plugin",
+      "options": {
+        "targetName": "test"
+      }
     }
-  ]
+  ],
+  "nxCloudId": "68932bc88bb419546bfe6c37",
+  "defaultBase": "main",
+  "sync": {
+    "applyChanges": true
+  }
 }
