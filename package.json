@@ -16,29 +16,45 @@
     "prepare": "is-ci || husky",
     "preinstall": "node ./scripts/preinstall.js",
     "test": "nx run-many -t test",
-    "e2e": "nx run-many -t e2e --projects ./e2e/*",
-    "lint-pnpm-lock": "eslint pnpm-lock.yaml"
+    "e2e": "nx run-many -t e2e --projects ./e2e/*"
   },
   "devDependencies": {
+    "@eslint/js": "^9.8.0",
+    "@nx/devkit": "21.3.11",
+    "@nx/eslint": "21.3.11",
+    "@nx/eslint-plugin": "21.3.11",
     "@nx/jest": "21.3.11",
     "@nx/js": "21.3.11",
     "@nx/plugin": "21.3.11",
     "@nx/workspace": "21.3.11",
     "@swc-node/register": "~1.9.1",
+    "@swc/cli": "~0.6.0",
     "@swc/core": "~1.5.7",
     "@swc/helpers": "~0.5.11",
+    "@swc/jest": "~0.2.38",
+    "@types/jest": "^30.0.0",
+    "@types/node": "18.16.9",
     "cz-git": "1.12.0",
     "czg": "1.12.0",
+    "eslint": "^9.8.0",
+    "eslint-config-prettier": "^10.0.0",
     "fast-glob": "3.3.3",
     "husky": "9.1.7",
     "is-ci": "4.1.0",
     "jest": "^30.0.2",
+    "jest-environment-node": "^30.0.2",
+    "jest-util": "^30.0.2",
+    "jsonc-eslint-parser": "^2.1.0",
     "nx": "21.3.11",
     "prettier": "3.6.2",
     "pretty-quick": "4.2.2",
     "semver": "7.7.2",
+    "ts-jest": "^29.4.0",
+    "ts-node": "10.9.1",
     "tslib": "^2.3.0",
-    "typescript": "~5.8.2"
+    "typescript": "~5.8.2",
+    "typescript-eslint": "^8.29.0",
+    "verdaccio": "^6.0.5"
   },
   "config": {
     "commitizen": {
@@ -48,12 +64,12 @@
   },
   "nx": {
     "includedScripts": [
-      "lint-pnpm-lock",
       "check-commit",
       "check-format",
       "check-format:quick",
       "check-lock-files"
     ]
   },
-  "packageManager": "pnpm@10.13.1"
+  "packageManager": "pnpm@10.13.1",
+  "dependencies": {}
 }

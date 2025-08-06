@@ -35,11 +35,6 @@
       "parallelism": false
     },
     "lint": {
-      "dependsOn": ["@stonx/source:lint-pnpm-lock"],
-      "cache": true,
-      "inputs": ["{projectRoot}/pnpm-lock.yaml"]
-    },
-    "lint-pnpm-lock": {
       "cache": true,
       "inputs": ["{projectRoot}/pnpm-lock.yaml"]
     },

@@ -1,9 +1,6 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "baseUrl": ".",
-    "composite": true,
-    "declaration": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "emitDecoratorMetadata": true,

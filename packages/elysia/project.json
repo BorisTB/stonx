@@ -1,0 +1,46 @@
+{
+  "name": "elysia",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/elysia/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:swc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/packages/elysia",
+        "main": "packages/elysia/src/index.ts",
+        "tsConfig": "packages/elysia/tsconfig.lib.json",
+        "skipTypeCheck": true,
+        "stripLeadingPaths": true,
+        "assets": [
+          {
+            "input": "./packages/elysia/src",
+            "glob": "**/!(*.ts)",
+            "output": "."
+          },
+          {
+            "input": "./packages/elysia/src",
+            "glob": "**/*.d.ts",
+            "output": "."
+          }
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "{projectRoot}/jest.config.ts",
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    }
+  }
+}
