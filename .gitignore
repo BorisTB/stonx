@@ -24,6 +24,9 @@ node_modules
 !.vscode/launch.json
 !.vscode/extensions.json
 
+# Logs
+*.log
+
 # misc
 /.sass-cache
 /connect.lock
