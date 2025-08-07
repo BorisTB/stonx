@@ -6,23 +6,38 @@
   "tags": [],
   "targets": {
     "build": {
-      "executor": "@nx/js:swc",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
-        "outputPath": "dist/packages/elysia",
+        "clean": true,
+        "outputPath": "packages/elysia/dist",
         "main": "packages/elysia/src/index.ts",
         "tsConfig": "packages/elysia/tsconfig.lib.json",
-        "skipTypeCheck": true,
-        "stripLeadingPaths": true,
         "assets": [
+          "packages/elysia/*.md",
           {
             "input": "./packages/elysia/src",
             "glob": "**/!(*.ts)",
-            "output": "."
+            "output": "./src"
           },
           {
             "input": "./packages/elysia/src",
             "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./packages/elysia",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./packages/elysia",
+            "glob": "executors.json",
+            "output": "."
+          },
+          {
+            "input": "./packages/elysia",
+            "glob": "migrations.json",
             "output": "."
           }
         ]
@@ -41,6 +56,7 @@
           "codeCoverage": true
         }
       }
-    }
+    },
+    "cleanup-tsconfig": {}
   }
 }

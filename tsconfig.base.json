@@ -1,26 +1,21 @@
 {
   "compilerOptions": {
-    "allowJs": true,
+    "composite": true,
     "declarationMap": true,
     "emitDeclarationOnly": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
     "importHelpers": true,
     "isolatedModules": true,
-    "lib": ["ES2022"],
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "lib": ["es2022"],
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
     "noEmitOnError": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
-    "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2021",
-    "types": ["node", "jest"],
-    "typeRoots": ["./node_modules/@types"],
+    "target": "es2022",
     "customConditions": ["development"]
   }
 }

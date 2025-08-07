@@ -1,0 +1,12 @@
+import { Elysia } from 'elysia'
+import { node } from '@elysiajs/node'
+
+const port = process.env.PORT || 3000;
+
+export const app = new Elysia({ adapter: node() })
+  .get('/', () => 'Hello Elysia')
+  .listen(port, ({ url }) => {
+    console.log(`🦊 Elysia is running at ${url}`)
+  });
+
+export default app;

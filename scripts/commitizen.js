@@ -1,3 +1,8 @@
+const fs = require('node:fs');
+const path = require('node:path');
+
+const packages = fs.readdirSync(path.resolve(__dirname, 'packages'));
+
 const scopes = [
   { value: 'core', name: 'core:     anything workspace core specific' },
   { value: 'misc', name: 'misc:                  misc stuff' },
@@ -5,7 +10,7 @@ const scopes = [
     value: 'repo',
     name: 'repo:                  anything related to managing the repo itself'
   },
-  { value: 'elysia', name: 'elysia:               anything Elysia specific' }
+  ...packages
 ];
 
 // precomputed scope
