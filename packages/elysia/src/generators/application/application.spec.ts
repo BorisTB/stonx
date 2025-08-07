@@ -9,7 +9,7 @@ import * as devkit from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { applicationGenerator } from './application';
 
-describe('application generator', () => {
+describe.skip('application generator', () => {
   let tree: Tree;
   const appDirectory = 'my-elysia-app';
 

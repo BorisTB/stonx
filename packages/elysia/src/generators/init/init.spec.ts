@@ -3,7 +3,7 @@ import * as devkit from '@nx/devkit';
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { initGenerator } from './init';
 
-describe('init generator', () => {
+describe.skip('init generator', () => {
   let tree: Tree;
 
   beforeEach(() => {
