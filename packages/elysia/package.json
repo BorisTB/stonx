@@ -1,23 +1,34 @@
 {
   "name": "@stonx/elysia",
-  "version": "0.0.1",
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    "./package.json": "./package.json",
-    ".": {
-      "development": "./src/index.ts",
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "default": "./dist/index.js"
-    }
+  "version": "0.0.0",
+  "private": false,
+  "author": "BorisTB",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/BorisTB/stonx.git",
+    "directory": "packages/elysia"
   },
-  "files": [
-    "dist",
-    "!**/*.tsbuildinfo"
+  "keywords": [
+    "Nx",
+    "Elysia",
+    "http",
+    "web",
+    "server",
+    "api"
   ],
-  "dependencies": {
-    "@swc/helpers": "~0.5.11"
+  "bugs": "https://github.com/BorisTB/stonx/issues",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "generators": "./generators.json",
+  "peerDependencies": {
+    "@nx/devkit": ">=18.0.0 <22.0.0",
+    "@nx/node": ">=18.0.0 <22.0.0",
+    "nx": ">=18.0.0 <22.0.0"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "http://localhost:4873"
   }
 }

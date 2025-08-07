@@ -6,6 +6,5 @@
     {
       "path": "./packages/elysia"
     }
-  ],
-  "exclude": ["node_modules", "tmp"]
+  ]
 }

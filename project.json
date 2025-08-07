@@ -11,32 +11,11 @@
         "clear": false
       }
     },
-    "populate-local-registry-storage": {
-      "cache": true,
-      "inputs": [
-        {
-          "input": "production",
-          "projects": ["tag:npm:public"]
-        },
-        "{workspaceRoot}/scripts/local-registry",
-        "native"
-      ],
-      "dependsOn": [
-        "local-registry",
-        {
-          "target": "build",
-          "projects": ["tag:npm:public"]
-        }
-      ],
-      "command": "node ./scripts/local-registry/run-populate-storage.mjs",
-      "outputs": ["{workspaceRoot}/dist/local-registry/storage"]
-    },
     "check-format:quick": {
       "parallelism": false
     },
     "lint": {
-      "cache": true,
-      "inputs": ["{projectRoot}/pnpm-lock.yaml"]
+      "cache": true
     },
     "prepush": {
       "dependsOn": ["check-commit", "check-format:quick", "check-lock-files"]
