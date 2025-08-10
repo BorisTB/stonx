@@ -27,7 +27,8 @@ export default async () => {
     gitTag: false,
     firstRelease: true,
     versionActionsOptionsOverrides: {
-      skipLockFileUpdate: true
+      skipLockFileUpdate: true,
+      manifestRootsToUpdate: null
     }
   });
   await releasePublish({
