@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 
-const packages = fs.readdirSync(path.resolve('packages'));
+const packages = fs.readdirSync(path.resolve(process.cwd(), 'packages'));
 
 const scopes = [
   { value: 'core', name: 'core:     anything workspace core specific' },
@@ -10,7 +10,13 @@ const scopes = [
     value: 'repo',
     name: 'repo:                  anything related to managing the repo itself'
   },
-  ...packages
+  ...packages.reduce((acc, filename) => {
+    if (!filename?.startsWith('.')) {
+      return [...acc, { value: filename, name: `${filename}: ${filename}` }];
+    }
+
+    return acc;
+  }, [])
 ];
 
 // precomputed scope
