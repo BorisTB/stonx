@@ -6,7 +6,9 @@
 /// <reference path="registry.d.ts" />
 
 export default () => {
+  console.log('Teardown registry');
   if (global.stopLocalRegistry) {
     global.stopLocalRegistry();
+    console.log('Registry down');
   }
 };

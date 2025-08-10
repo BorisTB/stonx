@@ -1,30 +1,20 @@
 import { execSync } from 'child_process';
-import { join, dirname } from 'path';
-import { mkdirSync, rmSync } from 'fs';
+import {
+  addPlugin,
+  cleanupTestProject,
+  createTestProject
+} from '@stonx/e2e-utils';
 
 describe('elysia', () => {
   let projectDirectory: string;
 
   beforeAll(() => {
     projectDirectory = createTestProject();
-
-    // The plugin has been built and published to a local registry in the jest globalSetup
-    // Install the plugin built with the latest source code into the test repo
-    execSync(`pnpm add -Dw @stonx/elysia@e2e`, {
-      cwd: projectDirectory,
-      stdio: 'inherit',
-      env: process.env
-    });
+    addPlugin(projectDirectory, 'elysia');
   });
 
   afterAll(() => {
-    if (projectDirectory) {
-      // Cleanup the test project
-      rmSync(projectDirectory, {
-        recursive: true,
-        force: true
-      });
-    }
+    cleanupTestProject(projectDirectory);
   });
 
   it('should be installed', () => {
@@ -34,34 +24,78 @@ describe('elysia', () => {
       stdio: 'inherit'
     });
   });
+
+  describe('application generator', () => {
+    beforeAll(() => {
+      execSync(
+        'npx nx g @stonx/elysia:application my-app --linter none --unitTestRunner none --e2eTestRunner none',
+        {
+          cwd: projectDirectory,
+          stdio: 'inherit',
+          env: process.env
+        }
+      );
+    });
+
+    it('should infer tasks', () => {
+      const projectDetails = JSON.parse(
+        execSync('nx show project my-app --json', {
+          cwd: projectDirectory
+        }).toString()
+      );
+
+      expect(projectDetails).toMatchObject({
+        name: 'my-app',
+        root: 'my-app',
+        sourceRoot: 'my-app/src',
+        projectType: 'application',
+        targets: {
+          build: {
+            executor: '@nx/esbuild:esbuild',
+            outputs: ['{options.outputPath}'],
+            defaultConfiguration: 'production',
+            options: {
+              platform: 'node',
+              main: 'my-app/src/main.ts',
+              tsConfig: 'my-app/tsconfig.app.json'
+            },
+            configurations: {
+              development: {},
+              production: {
+                esbuildOptions: {
+                  sourcemap: false,
+                  outExtension: {
+                    '.js': '.js'
+                  }
+                }
+              }
+            },
+            parallelism: true,
+            cache: true,
+            dependsOn: ['^build'],
+            inputs: ['production', '^production']
+          },
+          serve: {
+            continuous: true,
+            executor: '@nx/js:node',
+            defaultConfiguration: 'development',
+            dependsOn: ['build'],
+            options: {
+              buildTarget: 'my-app:build',
+              runBuildTargetDependencies: false
+            },
+            configurations: {
+              development: {
+                buildTarget: 'my-app:build:development'
+              },
+              production: {
+                buildTarget: 'my-app:build:production'
+              }
+            },
+            parallelism: true
+          }
+        }
+      });
+    });
+  });
 });
-
-/**
- * Creates a test project with create-nx-workspace and installs the plugin
- * @returns The directory where the test project was created
- */
-function createTestProject() {
-  const projectName = 'test-project';
-  const projectDirectory = join(process.cwd(), 'tmp', projectName);
-
-  // Ensure projectDirectory is empty
-  rmSync(projectDirectory, {
-    recursive: true,
-    force: true
-  });
-  mkdirSync(dirname(projectDirectory), {
-    recursive: true
-  });
-
-  execSync(
-    `pnpm dlx create-nx-workspace@latest ${projectName} --preset apps --nxCloud=skip --no-interactive`,
-    {
-      cwd: dirname(projectDirectory),
-      stdio: 'inherit',
-      env: process.env
-    }
-  );
-  console.log(`Created test project in "${projectDirectory}"`);
-
-  return projectDirectory;
-}

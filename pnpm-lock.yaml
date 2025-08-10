@@ -1239,7 +1239,7 @@ packages:
     resolution: {integrity: sha512-36/hTbH2uaWuGVERyC6da9YwGWnzUZXuPro/F2LfsdOsLnCojz/iSH8MxUt/FD2S5XBSVPhmArFUXcpCQ2Hkiw==}
 
   '@stonx/elysia@0.0.0-e2e':
-    resolution: {integrity: sha512-fbmcAw+4Or3qHjWk89OUqbBv/J1JzQ6grBu0Uei0IMvA1RMja78aCHF8KgoD+KYEPDu6i7WpCYmwEx6LtYFO5Q==}
+    resolution: {integrity: sha512-XugrFXt43NAfKxpztdc/eXhYPST9ItGXgVLOLkMzztkNcUc4xErU3b0ltRNvjUJHWFXmtqDJy6Row1sJwzWKwQ==}
     peerDependencies:
       '@nx/devkit': '>=18.0.0 <22.0.0'
       '@nx/eslint': '>=18.0.0 <22.0.0'
