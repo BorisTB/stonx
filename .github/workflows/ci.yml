@@ -42,5 +42,5 @@ jobs:
       # - run: pnpm exec nx-cloud record -- echo Hello World
       - run: pnpm exec nx run-many -t lint test build
       # Nx Cloud recommends fixes for failures to help you get CI green faster. Learn more: https://nx.dev/ci/features/self-healing-ci
-      - run: pnpm exec nx fix-ci
+      - run: npx nx fix-ci
         if: always()

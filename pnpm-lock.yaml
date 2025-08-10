@@ -35,9 +35,6 @@ importers:
       '@nx/workspace':
         specifier: 21.3.11
         version: 21.3.11(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3))(@swc/core@1.5.29(@swc/helpers@0.5.17))
-      '@stonx/elysia':
-        specifier: 0.0.0-e2e
-        version: 0.0.0-e2e(abf2725ddaf59f40c2915c768427bb58)
       '@swc-node/register':
         specifier: ~1.9.1
         version: 1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3)
@@ -1237,15 +1234,6 @@ packages:
 
   '@sinonjs/fake-timers@13.0.5':
     resolution: {integrity: sha512-36/hTbH2uaWuGVERyC6da9YwGWnzUZXuPro/F2LfsdOsLnCojz/iSH8MxUt/FD2S5XBSVPhmArFUXcpCQ2Hkiw==}
-
-  '@stonx/elysia@0.0.0-e2e':
-    resolution: {integrity: sha512-XugrFXt43NAfKxpztdc/eXhYPST9ItGXgVLOLkMzztkNcUc4xErU3b0ltRNvjUJHWFXmtqDJy6Row1sJwzWKwQ==}
-    peerDependencies:
-      '@nx/devkit': '>=18.0.0 <22.0.0'
-      '@nx/eslint': '>=18.0.0 <22.0.0'
-      '@nx/js': '>=18.0.0 <22.0.0'
-      '@nx/node': '>=18.0.0 <22.0.0'
-      tslib: '>=2.3.0'
 
   '@swc-node/core@1.13.3':
     resolution: {integrity: sha512-OGsvXIid2Go21kiNqeTIn79jcaX4l0G93X2rAnas4LFoDyA9wAwVK7xZdm+QsKoMn5Mus2yFLCc4OtX2dD/PWA==}
@@ -5887,14 +5875,6 @@ snapshots:
   '@sinonjs/fake-timers@13.0.5':
     dependencies:
       '@sinonjs/commons': 3.0.1
-
-  '@stonx/elysia@0.0.0-e2e(abf2725ddaf59f40c2915c768427bb58)':
-    dependencies:
-      '@nx/devkit': 21.3.11(nx@21.3.11(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3))(@swc/core@1.5.29(@swc/helpers@0.5.17)))
-      '@nx/eslint': 21.3.11(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3))(@swc/core@1.5.29(@swc/helpers@0.5.17))(@zkochan/js-yaml@0.0.7)(eslint@9.32.0)(nx@21.3.11(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3))(@swc/core@1.5.29(@swc/helpers@0.5.17)))(verdaccio@6.1.6(typanion@3.14.0))
-      '@nx/js': 21.3.11(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3))(@swc/core@1.5.29(@swc/helpers@0.5.17))(nx@21.3.11(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3))(@swc/core@1.5.29(@swc/helpers@0.5.17)))(verdaccio@6.1.6(typanion@3.14.0))
-      '@nx/node': 21.3.11(@babel/traverse@7.28.0)(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3))(@swc/core@1.5.29(@swc/helpers@0.5.17))(@types/node@18.16.9)(@zkochan/js-yaml@0.0.7)(babel-plugin-macros@3.1.0)(eslint@9.32.0)(nx@21.3.11(@swc-node/register@1.9.2(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)(typescript@5.8.3))(@swc/core@1.5.29(@swc/helpers@0.5.17)))(ts-node@10.9.1(@swc/core@1.5.29(@swc/helpers@0.5.17))(@types/node@18.16.9)(typescript@5.8.3))(typescript@5.8.3)(verdaccio@6.1.6(typanion@3.14.0))
-      tslib: 2.8.1
 
   '@swc-node/core@1.13.3(@swc/core@1.5.29(@swc/helpers@0.5.17))(@swc/types@0.1.24)':
     dependencies:

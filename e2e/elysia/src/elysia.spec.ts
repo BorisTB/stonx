@@ -1,8 +1,8 @@
 import { execSync } from 'child_process';
 import {
-  addPlugin,
   cleanupTestProject,
-  createTestProject
+  createTestProject,
+  installPlugin
 } from '@stonx/e2e-utils';
 
 describe('elysia', () => {
@@ -10,7 +10,7 @@ describe('elysia', () => {
 
   beforeAll(() => {
     projectDirectory = createTestProject();
-    addPlugin(projectDirectory, 'elysia');
+    installPlugin(projectDirectory, 'elysia');
   });
 
   afterAll(() => {
