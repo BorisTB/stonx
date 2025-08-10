@@ -1,5 +1,5 @@
 packages:
   - 'packages/*'
-
+  - 'e2e/*'
 onlyBuiltDependencies:
-  - nx
+  - 'nx'

@@ -71,6 +71,9 @@
           "codeCoverage": true
         }
       }
+    },
+    "e2e": {
+      "dependsOn": ["^build"]
     }
   },
   "plugins": [

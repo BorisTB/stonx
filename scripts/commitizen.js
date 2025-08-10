@@ -47,6 +47,7 @@ module.exports = {
     { value: 'feat', name: 'feat:     A new feature' },
     { value: 'fix', name: 'fix:      A bug fix' },
     { value: 'docs', name: 'docs:     Documentation only changes' },
+    { value: 'test', name: 'test:     Tests of packages' },
     {
       value: 'cleanup',
       name: 'cleanup:  A code change that neither fixes a bug nor adds a feature'

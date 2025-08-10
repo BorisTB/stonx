@@ -5,6 +5,9 @@
   "references": [
     {
       "path": "./packages/elysia"
+    },
+    {
+      "path": "./e2e/elysia"
     }
   ]
 }

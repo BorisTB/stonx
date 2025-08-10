@@ -1,0 +1,20 @@
+{
+  "name": "elysia-e2e",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "tags": ["scope:elysia", "type:e2e"],
+  "implicitDependencies": ["elysia"],
+  "projectType": "application",
+  "sourceRoot": "e2e/elysia/src",
+  "targets": {
+    "e2e": {
+      "executor": "@nx/jest:jest",
+      "inputs": ["e2eInputs"],
+      "outputs": ["{projectRoot}/test-output/jest/coverage"],
+      "options": {
+        "jestConfig": "e2e/elysia/jest.config.ts",
+        "runInBand": true
+      },
+      "dependsOn": ["^build"]
+    }
+  }
+}

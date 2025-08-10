@@ -1,11 +1,10 @@
 {
   "name": "@stonx/elysia",
-  "version": "0.1.0",
-  "private": false,
+  "version": "0.0.0-e2e",
   "author": "BorisTB",
   "repository": {
     "type": "git",
-    "url": "https://github.com/BorisTB/stonx.git",
+    "url": "git+https://github.com/BorisTB/stonx.git",
     "directory": "packages/elysia"
   },
   "keywords": [
