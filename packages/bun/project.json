@@ -1,0 +1,48 @@
+{
+  "name": "bun",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "packages/bun/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@nx/js:tsc",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "clean": true,
+        "outputPath": "packages/bun/dist",
+        "main": "packages/bun/src/index.ts",
+        "tsConfig": "packages/bun/tsconfig.lib.json",
+        "rootDir": "packages/bun/src",
+        "assets": [
+          "packages/bun/*.md",
+          {
+            "input": "./packages/bun/src",
+            "glob": "**/!(*.ts)",
+            "output": "./src"
+          },
+          {
+            "input": "./packages/bun/src",
+            "glob": "**/*.d.ts",
+            "output": "./src"
+          },
+          {
+            "input": "./packages/bun",
+            "glob": "generators.json",
+            "output": "."
+          },
+          {
+            "input": "./packages/bun",
+            "glob": "executors.json",
+            "output": "."
+          },
+          {
+            "input": "./packages/bun",
+            "glob": "migrations.json",
+            "output": "."
+          }
+        ]
+      }
+    }
+  }
+}

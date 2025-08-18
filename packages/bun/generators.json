@@ -1,0 +1,17 @@
+{
+  "generators": {
+    "application": {
+      "factory": "./src/generators/application/application",
+      "schema": "./src/generators/application/schema.json",
+      "aliases": ["app"],
+      "x-type": "application",
+      "description": "Create a bun application."
+    },
+    "init": {
+      "factory": "./src/generators/init/init",
+      "schema": "./src/generators/init/schema.json",
+      "description": "Initialize the `@stonx/bun` plugin.",
+      "hidden": true
+    }
+  }
+}

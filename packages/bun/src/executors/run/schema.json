@@ -1,0 +1,60 @@
+{
+  "$schema": "http://json-schema.org/schema",
+  "version": 2,
+  "title": "Bun Run executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "buildTarget": {
+      "type": "string",
+      "description": "The target to run to build you the app."
+    },
+    "buildTargetOptions": {
+      "type": "object",
+      "description": "Additional options to pass into the build target.",
+      "default": {}
+    },
+    "watch": {
+      "type": "boolean",
+      "description": "To run a file in watch mode",
+      "default": false
+    },
+    "hot": {
+      "type": "boolean",
+      "description": "Enable auto reload in bun's JavaScript runtime",
+      "default": true
+    },
+    "config": {
+      "type": "string",
+      "description": "Config file to load bun from (e.g. -c bunfig.toml"
+    },
+    "tsConfig": {
+      "type": "string",
+      "description": "Load tsconfig from path instead of cwd/tsconfig.json"
+    },
+    "smol": {
+      "type": "boolean",
+      "description": "In memory-constrained environments, use the smol flag to reduce memory usage at a cost to performance.",
+      "default": false
+    },
+    "bun": {
+      "type": "boolean",
+      "description": "Force a script or package to use Bun.js instead of Node.js (via symlinking node)",
+      "default": false
+    },
+    "runBuildTargetDependencies": {
+      "type": "boolean",
+      "description": "Whether to run dependencies before running the build. Set this to true if the project does not build libraries from source (e.g. 'buildLibsFromSource: false').",
+      "default": false
+    },
+    "waitUntilTargets": {
+      "type": "array",
+      "description": "The targets to run before starting the node app. Listed in the form <project>:<target>. The main target will run once all listed targets have output something to the console.",
+      "default": [],
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": []
+}

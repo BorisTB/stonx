@@ -33,9 +33,9 @@
     "projectsRelationship": "independent",
     "releaseTagPattern": "{projectName}@{version}",
     "version": {
+      "preVersionCommand": "pnpm dlx nx run-many -t build",
       "conventionalCommits": true,
       "fallbackCurrentVersionResolver": "disk",
-      "preVersionCommand": "pnpm dlx nx run-many -t build",
       "manifestRootsToUpdate": ["{projectRoot}", "{projectRoot}/dist"]
     },
     "changelog": {

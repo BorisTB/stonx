@@ -1,0 +1,9 @@
+{
+  "executors": {
+    "run": {
+      "implementation": "./src/executors/run/run",
+      "schema": "./src/executors/run/schema.json",
+      "description": "Execute a Node application using Bun."
+    }
+  }
+}
