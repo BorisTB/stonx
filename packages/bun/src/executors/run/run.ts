@@ -52,6 +52,7 @@ async function* bunRunExecutor(
   const project = context.projectGraph.nodes[context.projectName!];
   const cwd = options.cwd ? resolve(context.root, options.cwd) : context.root;
 
+  // 1) Wait for other targets if needed
   if (options.waitUntilTargets?.length) {
     const results = await waitForTargets(options.waitUntilTargets, context);
     for (const [i, result] of results.entries()) {
@@ -63,24 +64,27 @@ async function* bunRunExecutor(
     }
   }
 
+  //   // 2) Prepare path remapping for "built libs first"
+  //   const tsconfigOverridePath =
+  //     options.tsConfigOverride &&
+  //     buildTarget &&
+  //     (shouldBuildApp ? options.runBuildTargetDependencies !== false : false)
+  //       ? writeRuntimeTsconfigOverride(projectName, buildTarget, root, context)
+  //       : null;
+
   yield* createAsyncIterable<{ success: boolean }>(async ({ next, done }) => {
-    // Case 1: "main" only (no buildTarget)
-    logger.log('Bun Run: 1');
+    // Case 1: Run "raw" main file (without building it)
     if (options.main && !options.buildTarget) {
-      logger.log('Bun Run: 1.1');
       const entry = resolve(context.root, options.main);
       const proc = launch(entry, options, cwd);
       const code = await waitForExit(proc);
-      logger.log('Bun Run: 1.2');
       next({ success: code === 0 });
       done();
       return;
     }
 
-    // Case 2: buildTarget defined
-    logger.log('Bun Run: 2');
+    // Case 2: Build app first and then run the built main file
     if (options.buildTarget) {
-      logger.log('Bun Run: 2.1');
       const buildTarget = parseTargetString(options.buildTarget, context);
       const buildOptions: Record<string, any> = {
         ...readTargetOptions(buildTarget, context),
@@ -89,8 +93,6 @@ async function* bunRunExecutor(
       };
       const buildTargetExecutor =
         project.data.targets?.[buildTarget.target]?.executor;
-
-      logger.log('Bun Run: 2.2');
 
       const buildIterator = await runExecutor<{
         success: boolean;
@@ -113,15 +115,10 @@ async function* bunRunExecutor(
           buildTargetExecutor,
           options.main
         );
-        logger.log('Bun Run: 2.7');
 
         await killProcess(current);
-        logger.log('Bun Run: 2.8');
         current = launch(entry, options, cwd);
-        logger.log('Bun Run: 2.9');
-
         const code = await waitForExit(current);
-        logger.log('Bun Run: 2.10');
         next({ success: code === 0 });
       }
 
