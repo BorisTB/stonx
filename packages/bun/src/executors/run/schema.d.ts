@@ -25,16 +25,13 @@ export interface RunExecutorOptions {
   cwd?: string;
 }
 
-export interface NodeExecutorOptions {
-  inspect: boolean | InspectType;
-  runtimeArgs: string[];
-  args: string[];
-  waitUntilTargets: string[];
-  buildTarget: string;
-  buildTargetOptions: Record<string, any>;
-  host: string;
-  port: number;
-  watch?: boolean;
-  debounce?: number;
-  runBuildTargetDependencies?: boolean;
+export interface NormalizedRunExecutorOptions
+  extends Omit<RunExecutorOptions, 'inspect'> {
+  projectName: string;
+  root: string;
+  cwd: string;
+  watchMode: Exclude<WatchMode, true>;
+  inspect: false | InspectType;
+  shouldBuildApp: boolean;
+  shouldBuildDependencies: boolean;
 }

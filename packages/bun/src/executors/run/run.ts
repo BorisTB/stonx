@@ -9,47 +9,33 @@ import { resolve } from 'node:path';
 import {
   getBunVersion,
   killProcess,
-  spawnProcess,
   SpawnResult,
+  spawnWithBun,
   waitForExit
 } from '../../utils';
-import { RunExecutorOptions } from './schema';
-import { getFileToRun } from './lib';
-
-export interface BunRunExecutorOptions {
-  main?: string;
-  buildTarget?: string;
-  args?: string[];
-  runtimeArgs?: string[];
-  cwd?: string;
-  env?: Record<string, string>;
-}
-
-function buildArgs(entry: string, opts: BunRunExecutorOptions) {
-  const args: string[] = [];
-  if (opts.runtimeArgs?.length) args.push(...opts.runtimeArgs);
-  args.push(entry);
-  if (opts.args?.length) args.push(...opts.args);
-  return args;
-}
+import { NormalizedRunExecutorOptions, RunExecutorOptions } from './schema';
+import {
+  buildBunArgs,
+  getFileToRun,
+  normalizeOptions,
+  waitForTargets
+} from './lib';
 
 function launch(
   entry: string,
-  opts: BunRunExecutorOptions,
+  opts: NormalizedRunExecutorOptions,
   cwd: string
 ): SpawnResult {
-  const bunCmd = process.platform === 'win32' ? 'bun.exe' : 'bun';
-  const args = buildArgs(entry, opts);
+  const args = buildBunArgs(opts, entry);
 
-  return spawnProcess(bunCmd, args, {
+  return spawnWithBun(args, {
     cwd,
-    env: opts.env,
     stdio: 'inherit'
   });
 }
 
 async function* bunRunExecutor(
-  options: RunExecutorOptions,
+  _options: RunExecutorOptions,
   context: ExecutorContext
 ) {
   const bunVersion = await getBunVersion();
@@ -60,8 +46,21 @@ async function* bunRunExecutor(
 
   process.env.NODE_ENV ??= context?.configurationName ?? 'development';
 
+  const options = normalizeOptions(_options, context);
+
   const project = context.projectGraph.nodes[context.projectName!];
   const cwd = options.cwd ? resolve(context.root, options.cwd) : context.root;
+
+  if (options.waitUntilTargets?.length) {
+    const results = await waitForTargets(options.waitUntilTargets, context);
+    for (const [i, result] of results.entries()) {
+      if (!result.success) {
+        throw new Error(
+          `Wait until target failed: ${options.waitUntilTargets[i]}.`
+        );
+      }
+    }
+  }
 
   yield* createAsyncIterable<{ success: boolean }>(async ({ next, done }) => {
     // Case 1: "main" only (no buildTarget)

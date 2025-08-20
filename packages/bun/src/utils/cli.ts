@@ -64,7 +64,7 @@ export interface SpawnWithBunOptions {
   env?: Record<string, unknown>;
 }
 
-export function spawnWithBun(
+export function spawnWithBunOld(
   args: string[],
   options: SpawnWithBunOptions = {}
 ): UniversalChildProcess {

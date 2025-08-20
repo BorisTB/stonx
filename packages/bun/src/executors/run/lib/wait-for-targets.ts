@@ -9,7 +9,7 @@ export async function waitForTargets(
     targets.map(async (targetString) => {
       const target = parseTargetString(targetString, context);
       const output = await runExecutor(target, {}, context);
-      return await firstValueFrom(output);
+      return firstValueFrom(output);
     })
   );
 }

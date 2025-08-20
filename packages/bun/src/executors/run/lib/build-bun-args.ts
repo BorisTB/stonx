@@ -1,7 +1,7 @@
-import { NormalizedOptions } from './normalize-options';
+import { NormalizedRunExecutorOptions } from '../schema';
 
 export function buildBunArgs(
-  options: NormalizedOptions,
+  options: NormalizedRunExecutorOptions,
   entryFile?: string
 ): string[] {
   const args: string[] = [];

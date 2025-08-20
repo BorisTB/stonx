@@ -32,9 +32,8 @@ export function getServeConfig(
     continuous: true,
     executor: `${libs.plugin.name}:run`,
     defaultConfiguration: 'development',
-    dependsOn: ['build'],
     options: {
-      buildTarget: `${options.name}:build`,
+      main: joinPathFragments(options.appProjectRoot, 'src', 'main.ts'),
       tsConfig: joinPathFragments(options.appProjectRoot, 'tsconfig.app.json'),
       watch: true,
       hot: true,
@@ -47,9 +46,7 @@ export function getServeConfig(
       inspect: InspectType.Inspect
     },
     configurations: {
-      development: {
-        buildTarget: `${options.name}:build:development`
-      },
+      development: {},
       production: {
         buildTarget: `${options.name}:build:production`
       }

@@ -1,21 +1,15 @@
-import { InspectType, RunExecutorOptions, WatchMode } from '../schema';
+import {
+  InspectType,
+  NormalizedRunExecutorOptions,
+  RunExecutorOptions
+} from '../schema';
 import { ExecutorContext } from '@nx/devkit';
 import { resolve } from 'node:path';
-
-export interface NormalizedOptions extends Omit<RunExecutorOptions, 'inspect'> {
-  projectName: string;
-  root: string;
-  cwd: string;
-  watchMode: Exclude<WatchMode, true>;
-  inspect: false | InspectType;
-  shouldBuildApp: boolean;
-  shouldBuildDependencies: boolean;
-}
 
 export function normalizeOptions(
   options: RunExecutorOptions,
   context: ExecutorContext
-): NormalizedOptions {
+): NormalizedRunExecutorOptions {
   const projectName = context.projectName!;
   const root = context.root;
   const cwd = options.cwd ? resolve(context.root, options.cwd) : root;
@@ -42,6 +36,6 @@ export function normalizeOptions(
 function getWatchMode(
   watch: RunExecutorOptions['watch'],
   shouldBuildApp: boolean
-): NormalizedOptions['watchMode'] {
+): NormalizedRunExecutorOptions['watchMode'] {
   return watch === true ? (shouldBuildApp ? 'nx' : 'bun') : (watch ?? false);
 }

@@ -4,9 +4,14 @@ import {
   type IOType
 } from 'node:child_process';
 import { StdioOptions } from 'child_process';
+import { workspaceRoot } from '@nx/devkit';
 
 export function isBunRuntime(): boolean {
   return typeof Bun !== 'undefined';
+}
+
+export function getBunCmd(): string {
+  return process.env.BUN_BIN || 'bun';
 }
 
 export interface SpawnOptions {
@@ -31,6 +36,8 @@ export function spawnProcess(
   args: string[] = [],
   options: SpawnOptions = {}
 ): SpawnResult {
+  const cwd = options.cwd || workspaceRoot;
+
   const env: Record<string, string | undefined> = {
     ...process.env,
     ...(options.env || {})
@@ -46,17 +53,21 @@ export function spawnProcess(
   if (isBunRuntime()) {
     return Bun.spawn({
       cmd: [command, ...args],
-      cwd: options.cwd,
+      cwd,
       env,
       stdio: [stdin, stdout, stderr]
     });
   }
 
   return nodeSpawn(command, args, {
-    cwd: options.cwd,
+    cwd,
     env,
     stdio
   });
+}
+
+export function spawnWithBun(args?: string[], options?: SpawnOptions) {
+  return spawnProcess(getBunCmd(), args, options);
 }
 
 export async function waitForExit(proc: SpawnResult): Promise<number> {
