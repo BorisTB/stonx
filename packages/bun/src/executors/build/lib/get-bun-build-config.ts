@@ -13,7 +13,7 @@ export function getBunBuildConfig(
     define: executorOptions.define,
     outdir: executorOptions.outputPath,
     target: executorOptions.target,
-    external: executorOptions.external,
+    // external: executorOptions.external,
     format: executorOptions.format,
     minify: executorOptions.define,
     naming: executorOptions.naming,

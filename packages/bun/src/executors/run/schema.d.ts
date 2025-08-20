@@ -1,20 +1,28 @@
+export type WatchMode = boolean | 'nx' | 'bun';
+
+export enum InspectType {
+  Inspect = 'inspect',
+  InspectBrk = 'inspect-brk'
+}
+
 export interface RunExecutorOptions {
-  buildTarget: string;
+  main?: string;
+  buildTarget?: string;
   buildTargetOptions?: Record<string, unknown>;
-  watch?: boolean;
+  runtimeArgs: string[];
+  args: string[];
+  watch?: WatchMode;
   hot?: boolean;
-  debounce?: number;
+  inspect: boolean | InspectType;
+  debounce?: number; // TODO: add to schema
   config?: string;
   tsConfig?: string;
+  tsConfigOverride?: string;
   smol?: boolean;
   bun?: boolean;
   runBuildTargetDependencies?: boolean;
   waitUntilTargets: string[];
-}
-
-export const enum InspectType {
-  Inspect = 'inspect',
-  InspectBrk = 'inspect-brk'
+  cwd?: string;
 }
 
 export interface NodeExecutorOptions {

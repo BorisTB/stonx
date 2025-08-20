@@ -18,6 +18,12 @@
       "{workspaceRoot}/jest.preset.js",
       "{workspaceRoot}/.verdaccio/config.yml",
       {
+        "env": "SELECTED_CLI"
+      },
+      {
+        "env": "SELECTED_PM"
+      },
+      {
         "env": "NX_E2E_CI_CACHE_KEY"
       },
       {
@@ -36,7 +42,7 @@
       "preVersionCommand": "pnpm dlx nx run-many -t build",
       "conventionalCommits": true,
       "fallbackCurrentVersionResolver": "disk",
-      "manifestRootsToUpdate": ["{projectRoot}", "{projectRoot}/dist"]
+      "manifestRootsToUpdate": ["{projectRoot}/dist"]
     },
     "changelog": {
       "automaticFromRef": true,

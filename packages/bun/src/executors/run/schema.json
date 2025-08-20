@@ -5,9 +5,13 @@
   "description": "",
   "type": "object",
   "properties": {
+    "main": {
+      "type": "string",
+      "description": "Entry point to run (TS or JS). Example: src/main.ts or dist/app/main.js"
+    },
     "buildTarget": {
       "type": "string",
-      "description": "The target to run to build you the app."
+      "description": "Optional target that builds/rebuilds prior to (re)starting Bun, e.g. app:build"
     },
     "buildTargetOptions": {
       "type": "object",
@@ -15,7 +19,10 @@
       "default": {}
     },
     "watch": {
-      "type": "boolean",
+      "oneOf": [
+        { "type": "boolean" },
+        { "type": "string", "enum": ["nx", "bun"] }
+      ],
       "description": "To run a file in watch mode",
       "default": false
     },
@@ -24,6 +31,32 @@
       "description": "Enable auto reload in bun's JavaScript runtime",
       "default": true
     },
+    "inspect": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["inspect", "inspect-brk"]
+        },
+        {
+          "type": "boolean"
+        }
+      ],
+      "description": "Ensures the app is starting with debugging.",
+      "default": "inspect",
+      "x-priority": "important"
+    },
+    "runtimeArgs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Arguments for the Bun runtime (before the entry). Example: --no-warnings",
+      "default": []
+    },
+    "args": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Arguments for your program (after the entry).",
+      "default": []
+    },
     "config": {
       "type": "string",
       "description": "Config file to load bun from (e.g. -c bunfig.toml"
@@ -31,6 +64,10 @@
     "tsConfig": {
       "type": "string",
       "description": "Load tsconfig from path instead of cwd/tsconfig.json"
+    },
+    "tsConfigOverride": {
+      "type": "string",
+      "description": "Use a different tsconfig."
     },
     "smol": {
       "type": "boolean",
@@ -45,7 +82,7 @@
     "runBuildTargetDependencies": {
       "type": "boolean",
       "description": "Whether to run dependencies before running the build. Set this to true if the project does not build libraries from source (e.g. 'buildLibsFromSource: false').",
-      "default": false
+      "default": true
     },
     "waitUntilTargets": {
       "type": "array",
@@ -54,6 +91,10 @@
       "items": {
         "type": "string"
       }
+    },
+    "cwd": {
+      "description": "Current working directory of the command.",
+      "type": "string"
     }
   },
   "required": []

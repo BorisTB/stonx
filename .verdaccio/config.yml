@@ -1,5 +1,5 @@
 # path to a directory with all packages
-storage: ../build/local-registry/storage
+storage: ../dist/local-registry/storage
 
 auth:
   htpasswd:
@@ -41,7 +41,7 @@ packages:
     proxy: npmjs
 
 # log settings
-logs:
+log:
   type: stdout
   format: pretty
   level: warn

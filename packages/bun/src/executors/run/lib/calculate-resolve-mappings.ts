@@ -1,26 +1,20 @@
-import {
-  ExecutorContext,
-  joinPathFragments,
-  parseTargetString
-} from '@nx/devkit';
-import { NodeExecutorOptions } from '../schema';
+import { ExecutorContext, joinPathFragments, Target } from '@nx/devkit';
 import {
   calculateProjectBuildableDependencies,
   DependentBuildableProjectNode
 } from '@nx/js/src/utils/buildable-libs-utils';
 
 export function calculateResolveMappings(
-  context: ExecutorContext,
-  options: NodeExecutorOptions
-) {
-  const parsed = parseTargetString(options.buildTarget, context);
+  target: Target,
+  context: ExecutorContext
+): Record<string, string> {
   const { dependencies } = calculateProjectBuildableDependencies(
     context.taskGraph,
     context.projectGraph,
     context.root,
-    parsed.project,
-    parsed.target,
-    parsed.configuration || ''
+    target.project,
+    target.target,
+    target.configuration || ''
   );
   return dependencies.reduce<
     Record<DependentBuildableProjectNode['name'], string>

@@ -7,7 +7,7 @@ import {
 import { NormalizedOptions } from './normalize-options';
 import { libs } from '../../../utils';
 import { BuildExecutorOptions } from '../../../executors/build/schema';
-import { RunExecutorOptions } from '../../../executors/run/schema';
+import { InspectType, RunExecutorOptions } from '../../../executors/run/schema';
 
 export function getBuildConfig(
   options: NormalizedOptions
@@ -41,7 +41,10 @@ export function getServeConfig(
       bun: true,
       smol: false,
       runBuildTargetDependencies: false,
-      waitUntilTargets: []
+      waitUntilTargets: [],
+      runtimeArgs: [],
+      args: [],
+      inspect: InspectType.Inspect
     },
     configurations: {
       development: {

@@ -1,14 +1,37 @@
 import { ExecutorContext, logger, ProjectGraphProjectNode } from '@nx/devkit';
-import path from 'node:path';
-import { getRelativeDirectoryToProjectRoot } from '@nx/js/src/utils/get-main-file-dir';
+import { join } from 'node:path';
 import { interpolate } from 'nx/src/tasks-runner/utils';
+import { changeFilePathExtension } from './change-file-path-extension';
+import { getRelativePath } from './get-relative-path';
+
+function getFileName(
+  main: string | undefined,
+  buildOptions: Record<string, any> = {}
+): string {
+  if (main) {
+    return changeFilePathExtension(main, 'js', { fromExt: 'ts' });
+  }
+
+  if (buildOptions.outputFileName) {
+    return buildOptions.outputFileName;
+  }
+
+  if (buildOptions.main) {
+    return changeFilePathExtension(buildOptions.main, 'js', { fromExt: 'ts' });
+  }
+
+  return 'main.js';
+}
 
 export function getFileToRun(
   context: ExecutorContext,
   project: ProjectGraphProjectNode,
   buildOptions: Record<string, any>,
-  buildTargetExecutor?: string
+  buildTargetExecutor?: string,
+  main?: string
 ): string {
+  const fileName = getFileName(main, buildOptions);
+
   if (!buildOptions?.outputPath && !buildOptions?.outputFileName) {
     const outputPath =
       project.data.targets?.[buildOptions.target]?.outputs?.[0];
@@ -19,33 +42,18 @@ export function getFileToRun(
         projectRoot: project.data.root,
         workspaceRoot: context.root
       });
-      return path.join(outputFilePath, 'main.js');
+      return join(outputFilePath, fileName);
     }
-    const fallbackFile = path.join('dist', project.data.root, 'main.js');
+    const fallbackFile = join('dist', project.data.root, fileName);
 
     logger.warn(
       `Build option outputFileName not set for ${project.name}. Using fallback value of ${fallbackFile}.`
     );
 
-    return path.join(context.root, fallbackFile);
+    return join(context.root, fallbackFile);
   }
 
-  let outputFileName = buildOptions.outputFileName;
+  const outputFileName = getRelativePath(project.data.root, fileName);
 
-  if (!outputFileName) {
-    const fileName = `${path.parse(buildOptions.main).name}.js`;
-    if (
-      buildTargetExecutor === '@nx/js:tsc' ||
-      buildTargetExecutor === '@nx/js:swc'
-    ) {
-      outputFileName = path.join(
-        getRelativeDirectoryToProjectRoot(buildOptions.main, project.data.root),
-        fileName
-      );
-    } else {
-      outputFileName = fileName;
-    }
-  }
-
-  return path.join(context.root, buildOptions.outputPath, outputFileName);
+  return join(context.root, buildOptions.outputPath, outputFileName);
 }

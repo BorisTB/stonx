@@ -8,13 +8,17 @@ import {
   isBunSubprocess,
   spawnWithBun
 } from '../../utils';
-import { getBunBuildConfig } from './lib/get-bun-build-config';
-import { getBunBuildArgv } from './lib/get-bun-build-argv';
+import { getBunBuildArgv, getBunBuildConfig, normalizeOptions } from './lib';
+
+export interface BunBuildResult {
+  success: boolean;
+  outfile: string;
+}
 
 async function* buildExecutor(
-  options: BuildExecutorOptions,
+  _options: BuildExecutorOptions,
   context: ExecutorContext
-) {
+): AsyncGenerator<BunBuildResult> {
   const bunVersion = await getBunVersion();
 
   if (!bunVersion) {
@@ -27,6 +31,15 @@ async function* buildExecutor(
 
   process.env['NODE_ENV'] ??= 'production';
 
+  const { sourceRoot, root } =
+    context.projectsConfigurations.projects[context.projectName];
+  const options = normalizeOptions(_options, context.root, sourceRoot, root);
+
+  const getResult = (success: boolean): BunBuildResult => ({
+    success,
+    outfile: options.mainOutputPath
+  });
+
   if (isBun) {
     const config = getBunBuildConfig(options, context);
     const result = await Bun.build(config);
@@ -38,17 +51,15 @@ async function* buildExecutor(
       const outputText = await Promise.all(outputTextAsync);
       outputText.forEach((out) => console.log(out));
       console.log(`Build completed for  ${context.projectName}`);
-      yield { success: true };
+      yield getResult(true);
     } else {
-      yield { success: false };
+      yield getResult(false);
     }
   } else {
     const args = getBunBuildArgv(options, context);
-    yield* createAsyncIterable<{
-      success: boolean;
-      options?: Record<string, any>;
-    }>(async ({ next, done }) => {
+    yield* createAsyncIterable<BunBuildResult>(async ({ next, done }) => {
       const childProcess = spawnWithBun(args, {
+        stdio: 'pipe',
         stderr: 'inherit',
         stdin: 'pipe',
         stdout: 'inherit'
@@ -117,13 +128,13 @@ async function* buildExecutor(
       if (isBunSubprocess(childProcess)) {
         childProcess.exited.then((code) => {
           console.log(`Build completed for  ${context.projectName}`);
-          next({ success: code === 0 });
+          next(getResult(code === 0));
           done();
         });
       } else {
         childProcess.on('exit', (code) => {
           console.log(`Build completed for  ${context.projectName}`);
-          next({ success: code === 0 });
+          next(getResult(code === 0));
           done();
         });
       }

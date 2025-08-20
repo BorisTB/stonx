@@ -16,7 +16,7 @@ export interface BuildExecutorOptions {
   env?: 'inline' | 'disable' | `${string}*` | undefined;
   sourcemap?: 'none' | 'linked' | 'external';
   minify?: boolean;
-  external?: string[];
+  external?: 'all' | 'none' | string[];
   packages?: 'bundle' | 'external';
   naming?: string;
   publicPath?: string;
@@ -27,4 +27,13 @@ export interface BuildExecutorOptions {
   drop?: string[];
   generateLockfile?: boolean;
   generatePackageJson?: boolean;
+}
+
+export interface NormalizedBuildExecutorOptions extends BuildExecutorOptions {
+  rootDir: string;
+  projectRoot: string;
+  mainOutputPath: string;
+  generatePackageJson: boolean;
+  root?: string;
+  sourceRoot?: string;
 }

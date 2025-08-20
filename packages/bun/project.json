@@ -13,7 +13,6 @@
         "outputPath": "packages/bun/dist",
         "main": "packages/bun/src/index.ts",
         "tsConfig": "packages/bun/tsconfig.lib.json",
-        "rootDir": "packages/bun/src",
         "assets": [
           "packages/bun/*.md",
           {

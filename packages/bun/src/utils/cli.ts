@@ -1,20 +1,13 @@
 import { workspaceRoot } from '@nx/devkit';
 import { workerData } from 'node:worker_threads';
 import type { ChildProcess, IOType, SpawnOptions } from 'node:child_process';
-import { spawn as nodeSpawn } from 'node:child_process';
-import { ForkOptions } from 'child_process';
+import { spawn } from 'node:child_process';
 
 export const isBun = typeof Bun !== 'undefined';
 
 export type UniversalChildProcess =
   | ChildProcess
   | Bun.Subprocess<any, any, any>;
-
-export function isBunSubprocess(
-  process: UniversalChildProcess
-): process is Bun.Subprocess<any, any, any> {
-  return isBun && 'exited' in process;
-}
 
 export async function universalSpawnSync(cmd: string): Promise<string | null> {
   if (isBun) {
@@ -58,12 +51,13 @@ export function runSpawn(
       spawnOptions.stdio = [stdin, stdout, stderr];
     }
 
-    return nodeSpawn(cmd, args, spawnOptions);
+    return spawn(cmd, args, spawnOptions);
   }
 }
 
 export interface SpawnWithBunOptions {
   cwd?: string;
+  stdio?: IOType;
   stdin?: IOType;
   stdout?: IOType;
   stderr?: IOType;
@@ -74,17 +68,23 @@ export function spawnWithBun(
   args: string[],
   options: SpawnWithBunOptions = {}
 ): UniversalChildProcess {
+  const bunBin = process.env.BUN_BIN || 'bun';
   const cwd = options.cwd || workspaceRoot;
   const env = {
     ...process.env,
     ...(workerData || {}),
     ...(options.env || {})
   };
-  const { stdin = 'ignore', stdout = 'pipe', stderr = 'pipe' } = options;
+  const {
+    stdin = 'ignore',
+    stdout = 'pipe',
+    stderr = 'pipe',
+    stdio = 'pipe'
+  } = options;
 
   if (isBun) {
     return Bun.spawn({
-      cmd: ['bun', ...args],
+      cmd: [bunBin, ...args],
       cwd,
       env,
       stdin,
@@ -93,32 +93,10 @@ export function spawnWithBun(
     });
   }
 
-  const { spawn } = await import('node:child_process');
-
-  return spawn('bun', args, {
+  return spawn(bunBin, args, {
     cwd,
     env,
     windowsHide: true,
-    stdio: [stdin, stdout, stderr]
+    stdio
   });
-}
-
-export function runFork(
-  modulePath: string,
-  args: ReadonlyArray<string> = [],
-  options: ForkOptions = {}
-) {
-  if (isBun) {
-    // Bun.spawn version
-    return Bun.spawn({
-      cmd: ['bun', modulePath, ...args],
-      stdin: 'inherit',
-      stdout: 'inherit',
-      stderr: 'pipe'
-    });
-  } else {
-    // Node.js fork version
-    const { fork } = await import('node:child_process');
-    return fork(modulePath, args, options);
-  }
 }
