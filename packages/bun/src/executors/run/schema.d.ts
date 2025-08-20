@@ -1,6 +1,6 @@
 export type WatchMode = boolean | 'nx' | 'bun';
 
-export enum InspectType {
+export const enum InspectType {
   Inspect = 'inspect',
   InspectBrk = 'inspect-brk'
 }

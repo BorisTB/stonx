@@ -4,7 +4,6 @@
     "declarationMap": true,
     "emitDeclarationOnly": true,
     "importHelpers": true,
-    "isolatedModules": true,
     "lib": ["es2022"],
     "module": "nodenext",
     "moduleResolution": "nodenext",

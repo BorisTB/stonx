@@ -2,7 +2,8 @@ import {
   ExecutorContext,
   logger,
   parseTargetString,
-  readTargetOptions
+  readTargetOptions,
+  runExecutor
 } from '@nx/devkit';
 import { createAsyncIterable } from '@nx/devkit/src/utils/async-iterable';
 import { resolve } from 'node:path';
@@ -91,34 +92,43 @@ async function* bunRunExecutor(
 
       logger.log('Bun Run: 2.2');
 
+      const buildIterator = await runExecutor<{
+        success: boolean;
+        outputPath?: string;
+      }>(buildTarget, {}, context);
+
       let current: SpawnResult | null = null;
 
-      const entry = getFileToRun(
-        context,
-        project,
-        buildOptions,
-        buildTargetExecutor,
-        options.main
-      );
-      logger.log('Bun Run: 2.7');
+      for await (const res of buildIterator) {
+        if (!res.success) {
+          logger.error(`Build failed for ${options.buildTarget}`);
+          next({ success: false });
+          continue;
+        }
+
+        const entry = getFileToRun(
+          context,
+          project,
+          buildOptions,
+          buildTargetExecutor,
+          options.main
+        );
+        logger.log('Bun Run: 2.7');
+
+        await killProcess(current);
+        logger.log('Bun Run: 2.8');
+        current = launch(entry, options, cwd);
+        logger.log('Bun Run: 2.9');
+
+        const code = await waitForExit(current);
+        logger.log('Bun Run: 2.10');
+        next({ success: code === 0 });
+      }
 
       await killProcess(current);
-      logger.log('Bun Run: 2.8');
-      current = launch(entry, options, cwd);
-      logger.log('Bun Run: 2.9');
-
-      const code = await waitForExit(current);
-      logger.log('Bun Run: 2.10');
-      next({ success: code === 0 });
-      logger.log('Bun Run: 2.11');
-
-      await killProcess(current);
-      logger.log('Bun Run: 2.12');
       done();
-      logger.log('Bun Run: 2.13');
       return;
     }
-    logger.log('Bun Run: 2.14');
 
     throw new Error(
       `Either "main" or "buildTarget" must be defined in executor options`

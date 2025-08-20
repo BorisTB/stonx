@@ -11,9 +11,6 @@
     },
     {
       "path": "./packages/bun"
-    },
-    {
-      "path": "./apps/foo-app"
     }
   ]
 }

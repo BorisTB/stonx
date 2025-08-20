@@ -80,8 +80,29 @@ export async function applicationGenerator(
       options.appProjectRoot,
       'tsconfig.app.json',
       {
-        module: 'nodenext',
-        moduleResolution: 'nodenext'
+        // Environment setup & latest features
+        lib: ['ESNext'],
+        target: 'ESNext',
+        module: 'Preserve',
+        moduleDetection: 'force',
+
+        // Bundler mode
+        moduleResolution: 'bundler',
+        allowImportingTsExtensions: true,
+        verbatimModuleSyntax: true,
+        noEmit: true,
+
+        // Best practices
+        strict: true,
+        skipLibCheck: true,
+        noFallthroughCasesInSwitch: true,
+        noUncheckedIndexedAccess: true,
+        noImplicitOverride: true,
+
+        // Some stricter flags (disabled by default)
+        noUnusedLocals: false,
+        noUnusedParameters: false,
+        noPropertyAccessFromIndexSignature: false
       },
       options.linter === 'eslint'
         ? ['eslint.config.js', 'eslint.config.cjs', 'eslint.config.mjs']
