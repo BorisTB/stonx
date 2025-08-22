@@ -1,15 +1,13 @@
-import { BuildExecutorOptions } from '../schema';
-import { ExecutorContext } from '@nx/devkit';
+import { NormalizedBuildExecutorOptions } from '../schema';
 import { getBunBuildConfig } from './get-bun-build-config';
 
 const isNil = (value: any): value is undefined | null => value == null;
 const isString = (value: any): value is string => typeof value === 'string';
 
 export function getBunBuildArgv(
-  options: BuildExecutorOptions,
-  context: ExecutorContext
+  options: NormalizedBuildExecutorOptions
 ): string[] {
-  const cfg = getBunBuildConfig(options, context);
+  const cfg = getBunBuildConfig(options);
   const production = process.env?.NODE_ENV === 'production';
 
   const allArgs = [
@@ -19,21 +17,22 @@ export function getBunBuildArgv(
     !isNil(options.tsConfig) && `--tsconfig-override=${options.tsConfig}`,
     !isNil(options.bun) && `--bun`,
     !isNil(options.smol) && `--smol`,
+    !isNil(cfg.target) && `--target=${cfg.target}`,
 
     cfg.entrypoints.join(' '),
 
     production && '--production',
-    !isNil(cfg.target) && `--target=${cfg.target}`,
     !isNil(cfg.root) && `--root=${cfg.root}`,
     !isNil(cfg.env) && `--env=${cfg.env}`,
     !isNil(cfg.outdir) && `--outdir=${cfg.outdir}`,
+    !isNil(options.outputFileName) && `--outfile=${options.outputFileName}`,
     !isNil(cfg.sourcemap) && `--sourcemap=${cfg.sourcemap}`,
     !isNil(cfg.publicPath) && `--public-path=${cfg.publicPath}`,
     !isNil(cfg.naming) && `--entry-naming=${cfg.naming}`,
     !isNil(cfg.naming) && `--chunk-naming=${cfg.naming}`,
     !isNil(cfg.naming) && `--asset-naming=${cfg.naming}`,
     cfg.splitting && `--splitting`,
-    cfg.minify && `--minify`,
+    cfg.minify ? cfg.minify === true ? `--minify` : cfg.minify.whitespace,
     options.watch && `--watch`,
     !isNil(cfg.format) && `--format=${cfg.format}`,
     !isNil(cfg.external) && `--external=${cfg.external}`,

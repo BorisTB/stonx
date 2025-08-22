@@ -12,7 +12,7 @@ export function normalizeOptions(
 ): NormalizedRunExecutorOptions {
   const projectName = context.projectName!;
   const root = context.root;
-  const cwd = options.cwd ? resolve(context.root, options.cwd) : root;
+  const cwd = options.cwd ? resolve(context.root, options.cwd) : root; // TODO
 
   const shouldBuildApp = !!options.buildTarget;
   const shouldBuildDependencies = !!options.runBuildTargetDependencies;

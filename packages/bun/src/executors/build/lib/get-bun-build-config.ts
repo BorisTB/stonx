@@ -1,33 +1,28 @@
-import { BuildExecutorOptions } from '../schema';
-import { ExecutorContext } from '@nx/devkit';
+import { NormalizedBuildExecutorOptions } from '../schema';
 
 export function getBunBuildConfig(
-  executorOptions: BuildExecutorOptions,
-  context: ExecutorContext
+  opts: NormalizedBuildExecutorOptions
 ): Bun.BuildConfig {
   return {
-    entrypoints: [
-      executorOptions.main,
-      ...(executorOptions.additionalEntryPoints || [])
-    ],
-    define: executorOptions.define,
-    outdir: executorOptions.outputPath,
-    target: executorOptions.target,
-    // external: executorOptions.external,
-    format: executorOptions.format,
-    minify: executorOptions.define,
-    naming: executorOptions.naming,
-    publicPath: executorOptions.publicPath,
-    sourcemap: executorOptions.sourcemap,
-    splitting: executorOptions.splitting,
-    root: executorOptions.rootDir,
-    packages: executorOptions.packages,
-    loader: executorOptions.loader,
-    env: executorOptions.env,
-    banner: executorOptions.banner,
-    footer: executorOptions.footer,
-    drop: executorOptions.drop,
-    tsconfig: executorOptions.tsConfig,
+    entrypoints: [opts.main, ...(opts.additionalEntryPoints || [])],
+    define: opts.define,
+    outdir: opts.outputPath,
+    target: opts.target,
+    // external: opts.external, // TODO
+    format: opts.format,
+    minify: opts.minify,
+    naming: opts.naming,
+    publicPath: opts.publicPath,
+    sourcemap: opts.sourcemap,
+    splitting: opts.splitting,
+    root: opts.rootDir,
+    packages: opts.packages,
+    loader: opts.loader,
+    env: opts.env,
+    banner: opts.banner,
+    footer: opts.footer,
+    drop: opts.drop,
+    tsconfig: opts.tsConfig,
     throw: true
   };
 }

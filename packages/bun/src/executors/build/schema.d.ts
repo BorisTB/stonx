@@ -1,3 +1,11 @@
+export type BuildMinifyConfig =
+  | boolean
+  | {
+      whitespace?: boolean;
+      syntax?: boolean;
+      identifiers?: boolean;
+    };
+
 export interface BuildExecutorOptions {
   main: string;
   outputPath: string;
@@ -14,8 +22,8 @@ export interface BuildExecutorOptions {
   format?: 'esm' | 'cjs' | 'iife';
   splitting?: boolean;
   env?: 'inline' | 'disable' | `${string}*` | undefined;
-  sourcemap?: 'none' | 'linked' | 'external';
-  minify?: boolean;
+  sourcemap?: boolean | 'none' | 'linked' | 'inline' | 'external';
+  minify?: BuildMinifyConfig;
   external?: 'all' | 'none' | string[];
   packages?: 'bundle' | 'external';
   naming?: string;
@@ -27,6 +35,7 @@ export interface BuildExecutorOptions {
   drop?: string[];
   generateLockfile?: boolean;
   generatePackageJson?: boolean;
+  cwd?: string;
 }
 
 export interface NormalizedBuildExecutorOptions extends BuildExecutorOptions {
@@ -36,4 +45,6 @@ export interface NormalizedBuildExecutorOptions extends BuildExecutorOptions {
   generatePackageJson: boolean;
   root?: string;
   sourceRoot?: string;
+  sourcemap?: Exclude<BuildExecutorOptions['sourcemap'], boolean>;
+  splitting: boolean;
 }

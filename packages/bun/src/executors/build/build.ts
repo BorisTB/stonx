@@ -1,14 +1,28 @@
 import { ExecutorContext, logger } from '@nx/devkit';
-import { BuildExecutorOptions } from './schema';
+import { BuildExecutorOptions, NormalizedBuildExecutorOptions } from './schema';
 import { createAsyncIterable } from '@nx/devkit/src/utils/async-iterable';
 import { parentPort } from 'node:worker_threads';
 import {
   getBunVersion,
   isBun,
   isBunSubprocess,
+  SpawnResult,
   spawnWithBun
 } from '../../utils';
 import { getBunBuildArgv, getBunBuildConfig, normalizeOptions } from './lib';
+import { resolve } from 'node:path';
+
+function launch(
+  opts: NormalizedBuildExecutorOptions,
+  cwd: string
+): SpawnResult {
+  const args = getBunBuildArgv(opts);
+
+  return spawnWithBun(args, {
+    cwd,
+    stdio: 'inherit'
+  });
+}
 
 export interface BunBuildResult {
   success: boolean;
@@ -25,15 +39,13 @@ async function* buildExecutor(
     throw new Error(`bun command not found. Make sure the bun is available`);
   }
 
-  if (!context.projectName) {
-    throw new Error(`project name is undefined`);
-  }
+  process.env.NODE_ENV ??= context?.configurationName ?? 'development';
 
-  process.env['NODE_ENV'] ??= 'production';
+  const project = context.projectGraph.nodes[context.projectName!];
+  const { sourceRoot, root } = project.data;
+  const options = normalizeOptions(_options, context, sourceRoot, root);
 
-  const { sourceRoot, root } =
-    context.projectsConfigurations.projects[context.projectName];
-  const options = normalizeOptions(_options, context.root, sourceRoot, root);
+  const cwd = options.cwd ? resolve(context.root, options.cwd) : context.root;
 
   const getResult = (success: boolean): BunBuildResult => ({
     success,
@@ -41,7 +53,7 @@ async function* buildExecutor(
   });
 
   if (isBun) {
-    const config = getBunBuildConfig(options, context);
+    const config = getBunBuildConfig(options);
     const result = await Bun.build(config);
     for (const log of result.logs) {
       console.log(log);
@@ -56,13 +68,10 @@ async function* buildExecutor(
       yield getResult(false);
     }
   } else {
-    const args = getBunBuildArgv(options, context);
+    const args = getBunBuildArgv(options);
     yield* createAsyncIterable<BunBuildResult>(async ({ next, done }) => {
       const childProcess = spawnWithBun(args, {
-        stdio: 'pipe',
-        stderr: 'inherit',
-        stdin: 'pipe',
-        stdout: 'inherit'
+        stdio: 'inherit'
       });
 
       if (isBunSubprocess(childProcess)) {

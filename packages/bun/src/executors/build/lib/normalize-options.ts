@@ -3,21 +3,37 @@ import {
   BuildExecutorOptions,
   NormalizedBuildExecutorOptions
 } from '../schema';
+import { ExecutorContext } from '@nx/devkit';
 
 export function normalizeOptions(
   options: BuildExecutorOptions,
-  contextRoot: string,
+  context: ExecutorContext,
   sourceRoot: string | undefined,
   projectRoot: string
 ): NormalizedBuildExecutorOptions {
-  const outputPath = join(contextRoot, options.outputPath);
+  const root = context.root;
+  const outputPath = join(root, options.outputPath);
   const rootDir = options.rootDir
-    ? join(contextRoot, options.rootDir)
-    : join(contextRoot, projectRoot);
+    ? join(root, options.rootDir)
+    : join(root, projectRoot); // TODO
+  const mainOutputPath = resolve(
+    outputPath,
+    options.main.replace(`${projectRoot}/`, '').replace('.ts', '.js') // TODO
+  );
 
-  if (options.watch == null) {
-    options.watch = false;
-  }
+  const tsConfig = join(root, options.tsConfig);
+
+  const watch = options.watch ?? false;
+  const generatePackageJson = options.generatePackageJson ?? true;
+
+  const splitting = options.splitting ?? true;
+
+  const sourcemap =
+    typeof options.sourcemap === 'boolean'
+      ? options.sourcemap
+        ? 'inline'
+        : 'none'
+      : options.sourcemap;
 
   if (Array.isArray(options.external) && options.external.length > 0) {
     const firstItem = options.external[0];
@@ -28,16 +44,16 @@ export function normalizeOptions(
 
   return {
     ...options,
-    root: contextRoot,
+    splitting,
+    sourcemap,
+    root,
     sourceRoot,
     projectRoot,
     outputPath,
-    tsConfig: join(contextRoot, options.tsConfig),
+    tsConfig,
     rootDir,
-    mainOutputPath: resolve(
-      outputPath,
-      options.main.replace(`${projectRoot}/`, '').replace('.ts', '.js')
-    ),
-    generatePackageJson: options.generatePackageJson ?? true
+    watch,
+    mainOutputPath,
+    generatePackageJson
   };
 }
