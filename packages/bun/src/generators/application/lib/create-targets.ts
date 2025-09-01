@@ -14,13 +14,20 @@ export function getBuildConfig(
 ): TargetConfiguration<BuildExecutorOptions> {
   return {
     executor: `${libs.plugin.name}:build`,
+    inputs: ['production', '^production'],
     outputs: ['{options.outputPath}'],
+    dependsOn: ['^build'],
+    defaultConfiguration: 'production',
     options: {
       main: joinPathFragments(options.appProjectRoot, 'src', 'main.ts'),
       outputPath: options.outputPath,
       tsConfig: joinPathFragments(options.appProjectRoot, 'tsconfig.app.json'),
       smol: false,
       bun: true
+    },
+    configurations: {
+      development: {},
+      production: {}
     }
   };
 }

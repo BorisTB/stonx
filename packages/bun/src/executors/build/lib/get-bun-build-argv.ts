@@ -32,7 +32,7 @@ export function getBunBuildArgv(
     !isNil(cfg.naming) && `--chunk-naming=${cfg.naming}`,
     !isNil(cfg.naming) && `--asset-naming=${cfg.naming}`,
     cfg.splitting && `--splitting`,
-    cfg.minify ? cfg.minify === true ? `--minify` : cfg.minify.whitespace,
+    !isNil(cfg.minify) && `--minify`,
     options.watch && `--watch`,
     !isNil(cfg.format) && `--format=${cfg.format}`,
     !isNil(cfg.external) && `--external=${cfg.external}`,

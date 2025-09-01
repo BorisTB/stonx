@@ -1,0 +1,10 @@
+{
+  "extends": "../../tsconfig.e2e.json",
+  "files": [],
+  "include": [],
+  "references": [
+    {
+      "path": "./tsconfig.spec.json"
+    }
+  ]
+}

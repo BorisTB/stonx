@@ -59,7 +59,7 @@ export function addFlag<TValue extends string | boolean>(
 
 export function cfgToArgv<TConfig extends Config>(
   cfg: TConfig,
-  flagMap: ConfigArgvMap<TConfig>
+  argvMap: ConfigArgvMap<TConfig>
 ): string[] {
   const argv: string[] = [];
 
@@ -68,7 +68,7 @@ export function cfgToArgv<TConfig extends Config>(
 
     if (isNil(value)) continue;
 
-    const handler: ConfigValueMapper<typeof value> = flagMap[key];
+    const handler: ConfigValueMapper<typeof value> = argvMap[key];
     if (!isFunction(handler)) {
       console.error(`Handler for ${key} is not a function`);
       continue;

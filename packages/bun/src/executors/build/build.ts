@@ -1,28 +1,14 @@
 import { ExecutorContext, logger } from '@nx/devkit';
-import { BuildExecutorOptions, NormalizedBuildExecutorOptions } from './schema';
+import { BuildExecutorOptions } from './schema';
 import { createAsyncIterable } from '@nx/devkit/src/utils/async-iterable';
 import { parentPort } from 'node:worker_threads';
 import {
   getBunVersion,
   isBun,
   isBunSubprocess,
-  SpawnResult,
   spawnWithBun
 } from '../../utils';
 import { getBunBuildArgv, getBunBuildConfig, normalizeOptions } from './lib';
-import { resolve } from 'node:path';
-
-function launch(
-  opts: NormalizedBuildExecutorOptions,
-  cwd: string
-): SpawnResult {
-  const args = getBunBuildArgv(opts);
-
-  return spawnWithBun(args, {
-    cwd,
-    stdio: 'inherit'
-  });
-}
 
 export interface BunBuildResult {
   success: boolean;
@@ -45,7 +31,7 @@ async function* buildExecutor(
   const { sourceRoot, root } = project.data;
   const options = normalizeOptions(_options, context, sourceRoot, root);
 
-  const cwd = options.cwd ? resolve(context.root, options.cwd) : context.root;
+  // const cwd = options.cwd ? resolve(context.root, options.cwd) : context.root;
 
   const getResult = (success: boolean): BunBuildResult => ({
     success,

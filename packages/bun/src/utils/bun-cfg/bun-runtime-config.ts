@@ -6,7 +6,7 @@ export interface BunRuntimeConfig {
   bun?: boolean;
 }
 
-export const bunRuntimeConfigHandler = defineConfigArgvMap<BunRuntimeConfig>({
+export const bunRuntimeConfigArgvMap = defineConfigArgvMap<BunRuntimeConfig>({
   config: (v) => [addFlag('--config', v)],
   smol: (v) => [addFlag('--smol', v)],
   bun: (v) => [addFlag('--bun', v)]

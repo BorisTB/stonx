@@ -1,9 +1,9 @@
 import {
   spawn as nodeSpawn,
   ChildProcess,
-  type IOType
+  type IOType,
+  StdioOptions
 } from 'node:child_process';
-import { StdioOptions } from 'child_process';
 import { workspaceRoot } from '@nx/devkit';
 
 export function isBunRuntime(): boolean {

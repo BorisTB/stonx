@@ -11,6 +11,9 @@
     },
     {
       "path": "./packages/bun"
+    },
+    {
+      "path": "./e2e/bun-e2e"
     }
   ]
 }

@@ -1,14 +1,12 @@
 import { NormalizedBuildExecutorOptions } from '../schema';
+import Buni from '../../../utils/buni';
 
-export function getBunBuildConfig(
-  opts: NormalizedBuildExecutorOptions
-): Bun.BuildConfig {
-  return {
+export function getBunBuildConfig(opts: NormalizedBuildExecutorOptions) {
+  return Buni.createBuildConfig({
     entrypoints: [opts.main, ...(opts.additionalEntryPoints || [])],
     define: opts.define,
     outdir: opts.outputPath,
     target: opts.target,
-    // external: opts.external, // TODO
     format: opts.format,
     minify: opts.minify,
     naming: opts.naming,
@@ -24,5 +22,5 @@ export function getBunBuildConfig(
     drop: opts.drop,
     tsconfig: opts.tsConfig,
     throw: true
-  };
+  });
 }

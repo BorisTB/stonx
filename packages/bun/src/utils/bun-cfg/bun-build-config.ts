@@ -1,7 +1,11 @@
-import { addFlag, defineConfigArgvMap } from './cfg-to-argv';
+import { addFlag, cfgToArgv, defineConfigArgvMap } from './cfg-to-argv';
 import { isArray, isBool, isString } from '../logic';
 
-export const bunBuildConfigHandler = defineConfigArgvMap<Bun.BuildConfig>({
+export function createBunBuildConfig(opts: Bun.BuildConfig): Bun.BuildConfig {
+  return opts;
+}
+
+export const bunBuildConfigArgvMap = defineConfigArgvMap<Bun.BuildConfig>({
   // Positional args
   entrypoints: (v) => v,
 
@@ -65,3 +69,7 @@ export const bunBuildConfigHandler = defineConfigArgvMap<Bun.BuildConfig>({
   throw: (_v) => [], // execution-time behavior, not a CLI flag
   tsconfig: (v) => [addFlag(`--tsconfig-override`, v)]
 });
+
+export function bunBuildConfigToArgv(config: Bun.BuildConfig) {
+  return cfgToArgv(config, bunBuildConfigArgvMap);
+}
