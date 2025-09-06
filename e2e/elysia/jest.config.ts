@@ -12,7 +12,7 @@ swcJestConfig.swcrc = false;
 
 const config: Config = {
   displayName: 'elysia-e2e',
-  preset: '../../jest.preset.js',
+  preset: '../jest.preset.e2e.js',
   transform: {
     '^.+\\.[tj]s$': ['@swc/jest', swcJestConfig]
   },

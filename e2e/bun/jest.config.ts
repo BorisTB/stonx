@@ -13,7 +13,7 @@ swcJestConfig.swcrc = false;
 const config: Config = {
   detectOpenHandles: false,
   displayName: 'bun-e2e',
-  preset: '../../jest.preset.js',
+  preset: '../jest.preset.e2e.js',
   transform: {
     '^.+\\.[tj]s$': ['@swc/jest', swcJestConfig]
   },
