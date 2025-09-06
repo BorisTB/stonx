@@ -1,5 +1,6 @@
 /* eslint-disable */
 import { readFileSync } from 'fs';
+import type { Config } from 'jest';
 
 // Reading the SWC compilation config for the spec files
 const swcJestConfig = JSON.parse(
@@ -9,7 +10,7 @@ const swcJestConfig = JSON.parse(
 // Disable .swcrc look-up by SWC core because we're passing in swcJestConfig ourselves
 swcJestConfig.swcrc = false;
 
-export default {
+const config: Config = {
   displayName: 'elysia-e2e',
   preset: '../../jest.preset.js',
   transform: {
@@ -20,3 +21,5 @@ export default {
   globalSetup: '../../tools/scripts/start-local-registry.ts',
   globalTeardown: '../../tools/scripts/stop-local-registry.ts'
 };
+
+export default config;

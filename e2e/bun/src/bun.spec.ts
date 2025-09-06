@@ -1,53 +1,41 @@
-import { execSync } from 'child_process';
+import { cleanup, ensureNxProject } from '@nx/plugin/testing';
 import {
-  cleanupTestProject,
-  createTestProject,
-  installPlugin
+  assertPluginInstalled,
+  generateStonxApp,
+  getProjectDetails,
+  installStonxPlugin
 } from '@stonx/e2e-utils';
 
 describe('bun', () => {
-  let projectDirectory: string;
+  let bunApp: string;
 
   beforeAll(() => {
-    projectDirectory = createTestProject();
-    installPlugin(projectDirectory, 'bun');
+    ensureNxProject();
+    installStonxPlugin('bun');
   });
 
   afterAll(() => {
-    cleanupTestProject(projectDirectory);
+    cleanup();
   });
 
-  it('should be installed', () => {
-    // npm ls will fail if the package is not installed properly
-    execSync('pnpm ls --depth 100 @stonx/bun', {
-      cwd: projectDirectory,
-      stdio: 'inherit'
+  describe('setup', () => {
+    it('should be installed', () => {
+      assertPluginInstalled('bun');
     });
   });
 
   describe('application generator', () => {
     beforeAll(() => {
-      execSync(
-        'npx nx g @stonx/bun:application my-app --linter none --unitTestRunner none --e2eTestRunner none --framework none',
-        {
-          cwd: projectDirectory,
-          stdio: 'inherit',
-          env: process.env
-        }
-      );
+      bunApp = generateStonxApp('bun', '--framework none');
     });
 
-    it('should infer tasks', () => {
-      const projectDetails = JSON.parse(
-        execSync('nx show project my-app --json', {
-          cwd: projectDirectory
-        }).toString()
-      );
+    it('should properly set up project', () => {
+      const projectDetails = getProjectDetails(bunApp);
 
       expect(projectDetails).toMatchObject({
-        name: 'my-app',
-        root: 'my-app',
-        sourceRoot: 'my-app/src',
+        name: bunApp,
+        root: `apps/${bunApp}`,
+        sourceRoot: `apps/${bunApp}/src`,
         projectType: 'application',
         targets: {
           build: {
@@ -56,8 +44,8 @@ describe('bun', () => {
             outputs: ['{options.outputPath}'],
             defaultConfiguration: 'production',
             options: {
-              main: 'my-app/src/main.ts',
-              tsConfig: 'my-app/tsconfig.app.json',
+              main: `apps/${bunApp}/src/main.ts`,
+              tsConfig: `apps/${bunApp}/tsconfig.app.json`,
               smol: false,
               bun: true
             },
@@ -77,7 +65,7 @@ describe('bun', () => {
             configurations: {
               development: {},
               production: {
-                buildTarget: 'my-app:build:production'
+                buildTarget: `${bunApp}:build:production`
               }
             },
             parallelism: true

@@ -30,32 +30,34 @@ export async function applicationGenerator(
   const tasks: GeneratorCallback[] = [];
   const options = await normalizeOptions(tree, _options);
 
+  const logShowProjectCmdTask = () => {
+    logShowProjectCommand(options.name);
+  };
+
   if (options.framework === 'elysia') {
     const { applicationGenerator } = ensurePackage(
       libs.nxElysia.name,
       libs.nxElysia.version
     );
-    const elysiaTask = await applicationGenerator(tree, {
-      ...options,
-      skipFormat: true
-    });
-    tasks.push(elysiaTask);
 
-    return runTasksInSerial(
-      ...[
-        ...tasks,
-        () => {
-          logShowProjectCommand(options.name);
-        }
-      ]
+    tasks.push(
+      await applicationGenerator(tree, {
+        ...options,
+        skipFormat: true
+      })
     );
+
+    tasks.push(logShowProjectCmdTask);
+
+    return runTasksInSerial(...tasks);
   }
 
-  const initTask = await initGenerator(tree, {
-    ...options,
-    skipFormat: true
-  });
-  tasks.push(initTask);
+  tasks.push(
+    await initGenerator(tree, {
+      ...options,
+      skipFormat: true
+    })
+  );
 
   addAppFiles(tree, options);
   addProject(tree, options);
@@ -116,9 +118,7 @@ export async function applicationGenerator(
     await formatFiles(tree);
   }
 
-  tasks.push(() => {
-    logShowProjectCommand(options.name);
-  });
+  tasks.push(logShowProjectCmdTask);
 
   return runTasksInSerial(...tasks);
 }

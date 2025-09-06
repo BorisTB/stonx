@@ -10,7 +10,7 @@ import { getRelativePathToRootTsConfig } from '@nx/js';
 export function addAppFiles(tree: Tree, options: NormalizedOptions) {
   generateFiles(
     tree,
-    joinPathFragments(__dirname, '..', 'files'),
+    joinPathFragments(__dirname, '../files'),
     options.appProjectRoot,
     {
       ...options,

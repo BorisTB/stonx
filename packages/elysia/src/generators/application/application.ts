@@ -30,17 +30,20 @@ export async function applicationGeneratorInternal(
   const options = await normalizeOptions(tree, rawOptions);
 
   const tasks: GeneratorCallback[] = [];
-  const initTask = await initGenerator(tree, {
-    skipPackageJson: options.skipPackageJson,
-    skipFormat: true
-  });
-  tasks.push(initTask);
 
-  const nodeApplicationTask = await nodeApplicationGenerator(
-    tree,
-    toNodeApplicationGeneratorOptions(options)
+  tasks.push(
+    await initGenerator(tree, {
+      skipPackageJson: options.skipPackageJson,
+      skipFormat: true
+    })
   );
-  tasks.push(nodeApplicationTask);
+
+  tasks.push(
+    await nodeApplicationGenerator(
+      tree,
+      toNodeApplicationGeneratorOptions(options)
+    )
+  );
   createFiles(tree, options);
   updateTsConfig(tree, options);
 
