@@ -1,0 +1,26 @@
+/* eslint-disable */
+import { readFileSync } from 'fs';
+import type { Config } from 'jest';
+
+// Reading the SWC compilation config for the spec files
+const swcJestConfig = JSON.parse(
+  readFileSync(`${__dirname}/.spec.swcrc`, 'utf-8')
+);
+
+// Disable .swcrc look-up by SWC core because we're passing in swcJestConfig ourselves
+swcJestConfig.swcrc = false;
+
+const config: Config = {
+  detectOpenHandles: false,
+  displayName: 'bun-e2e',
+  preset: '../jest.preset.e2e.js',
+  transform: {
+    '^.+\\.[tj]s$': ['@swc/jest', swcJestConfig]
+  },
+  moduleFileExtensions: ['ts', 'js', 'html'],
+  coverageDirectory: 'test-output/jest/coverage',
+  globalSetup: '../../tools/scripts/start-local-registry.ts',
+  globalTeardown: '../../tools/scripts/stop-local-registry.ts'
+};
+
+export default config;

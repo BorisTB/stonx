@@ -8,7 +8,7 @@ export function updateTsConfig(tree: Tree, options: NormalizedOptions): void {
     tree,
     joinPathFragments(options.appProjectRoot, 'tsconfig.app.json'),
     (json) => {
-      json.compilerOptions.experimentalDecorators = true;
+      json.compilerOptions.experimentalDecorators = true; // TODO: is this needed in TypeScript v5.0 ?
       json.compilerOptions.emitDecoratorMetadata = true;
       json.compilerOptions.target = 'es2021';
       if (options.strict) {

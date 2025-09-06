@@ -1,4 +1,7 @@
 packages:
   - 'packages/*'
+  - 'apps/*'
+  - 'e2e/bun-e2e'
+  - 'e2e/bun'
 onlyBuiltDependencies:
   - 'nx'

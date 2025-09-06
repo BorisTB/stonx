@@ -1,0 +1,32 @@
+{
+  "name": "@stonx/bun",
+  "version": "0.0.1",
+  "author": "BorisTB",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/BorisTB/stonx.git",
+    "directory": "packages/bun"
+  },
+  "keywords": [
+    "Nx",
+    "Bun"
+  ],
+  "bugs": "https://github.com/BorisTB/stonx/issues",
+  "license": "MIT",
+  "type": "commonjs",
+  "main": "./src/index.js",
+  "types": "./src/index.d.ts",
+  "executors": "./executors.json",
+  "generators": "./generators.json",
+  "peerDependencies": {
+    "@nx/devkit": ">=20.0.0 <22.0.0",
+    "@nx/js": ">=20.0.0 <22.0.0",
+    "nx": "21.4.1",
+    "fast-glob": "3.3.3",
+    "@nx/eslint": "21.4.1",
+    "tslib": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

@@ -4,12 +4,31 @@
   "targets": {
     "local-registry": {
       "executor": "@nx/js:verdaccio",
+      "continuous": true,
       "options": {
         "port": 4873,
         "config": ".verdaccio/config.yml",
         "storage": "dist/local-registry/storage",
         "clear": false
       }
+    },
+    "release-local": {
+      "cache": true,
+      "inputs": [
+        {
+          "input": "production",
+          "projects": ["tag:npm:public"]
+        },
+        "{workspaceRoot}/tools/scripts/release-local.mjs"
+      ],
+      "dependsOn": [
+        {
+          "target": "build",
+          "projects": ["tag:npm:public"]
+        }
+      ],
+      "command": "node ./tools/scripts/release-local.mjs",
+      "outputs": ["{workspaceRoot}/dist/local-registry/storage"]
     },
     "check-format:quick": {
       "parallelism": false

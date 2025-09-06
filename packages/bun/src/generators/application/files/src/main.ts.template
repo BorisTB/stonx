@@ -1,0 +1,10 @@
+const port = process.env.PORT ? Number(process.env.PORT) : <%= port %>;
+
+const server = Bun.serve({
+  port,
+  fetch(req) {
+    return new Response("Bun!");
+  },
+});
+
+console.log(`Listening on ${server.url} ...`);

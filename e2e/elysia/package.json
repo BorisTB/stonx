@@ -1,6 +1,5 @@
 {
   "name": "elysia-e2e",
   "version": "0.0.1",
-  "private": true,
-  "nx": {}
+  "private": true
 }

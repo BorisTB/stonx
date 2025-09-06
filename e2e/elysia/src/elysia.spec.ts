@@ -1,53 +1,41 @@
-import { execSync } from 'child_process';
+import { cleanup, ensureNxProject } from '@nx/plugin/testing';
 import {
-  cleanupTestProject,
-  createTestProject,
-  installPlugin
+  assertPluginInstalled,
+  generateStonxApp,
+  getProjectDetails,
+  installStonxPlugin
 } from '@stonx/e2e-utils';
 
 describe('elysia', () => {
-  let projectDirectory: string;
+  let elysiaApp: string;
 
   beforeAll(() => {
-    projectDirectory = createTestProject();
-    installPlugin(projectDirectory, 'elysia');
+    ensureNxProject();
+    installStonxPlugin('elysia');
   });
 
   afterAll(() => {
-    cleanupTestProject(projectDirectory);
+    cleanup();
   });
 
-  it('should be installed', () => {
-    // npm ls will fail if the package is not installed properly
-    execSync('pnpm ls --depth 100 @stonx/elysia', {
-      cwd: projectDirectory,
-      stdio: 'inherit'
+  describe('setup', () => {
+    it('should be installed', () => {
+      assertPluginInstalled('elysia');
     });
   });
 
   describe('application generator', () => {
     beforeAll(() => {
-      execSync(
-        'npx nx g @stonx/elysia:application my-app --linter none --unitTestRunner none --e2eTestRunner none',
-        {
-          cwd: projectDirectory,
-          stdio: 'inherit',
-          env: process.env
-        }
-      );
+      elysiaApp = generateStonxApp('elysia');
     });
 
-    it('should infer tasks', () => {
-      const projectDetails = JSON.parse(
-        execSync('nx show project my-app --json', {
-          cwd: projectDirectory
-        }).toString()
-      );
+    it('should properly set up project', () => {
+      const projectDetails = getProjectDetails(elysiaApp);
 
       expect(projectDetails).toMatchObject({
-        name: 'my-app',
-        root: 'my-app',
-        sourceRoot: 'my-app/src',
+        name: elysiaApp,
+        root: `apps/${elysiaApp}`,
+        sourceRoot: `apps/${elysiaApp}/src`,
         projectType: 'application',
         targets: {
           build: {
@@ -56,8 +44,8 @@ describe('elysia', () => {
             defaultConfiguration: 'production',
             options: {
               platform: 'node',
-              main: 'my-app/src/main.ts',
-              tsConfig: 'my-app/tsconfig.app.json'
+              main: `apps/${elysiaApp}/src/main.ts`,
+              tsConfig: `apps/${elysiaApp}/tsconfig.app.json`
             },
             configurations: {
               development: {},
@@ -81,15 +69,15 @@ describe('elysia', () => {
             defaultConfiguration: 'development',
             dependsOn: ['build'],
             options: {
-              buildTarget: 'my-app:build',
+              buildTarget: `${elysiaApp}:build`,
               runBuildTargetDependencies: false
             },
             configurations: {
               development: {
-                buildTarget: 'my-app:build:development'
+                buildTarget: `${elysiaApp}:build:development`
               },
               production: {
-                buildTarget: 'my-app:build:production'
+                buildTarget: `${elysiaApp}:build:production`
               }
             },
             parallelism: true
