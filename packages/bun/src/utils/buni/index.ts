@@ -13,12 +13,15 @@ export function createBuildConfig(config: Bun.BuildConfig) {
   return config;
 }
 
-export function build() {}
+export function build(config: Bun.BuildConfig) {
+  return Bun.build(config);
+}
 
 export const Buni = {
   ...utils,
   spawn,
   bun,
+  build,
   node,
   run,
   createBuildConfig

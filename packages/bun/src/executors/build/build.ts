@@ -9,6 +9,7 @@ import {
   spawnWithBun
 } from '../../utils';
 import { getBunBuildArgv, getBunBuildConfig, normalizeOptions } from './lib';
+import Buni from '../../utils/buni';
 
 export interface BunBuildResult {
   success: boolean;
@@ -40,7 +41,7 @@ async function* buildExecutor(
 
   if (isBun) {
     const config = getBunBuildConfig(options);
-    const result = await Bun.build(config);
+    const result = await Buni.build(config);
     for (const log of result.logs) {
       console.log(log);
     }

@@ -55,7 +55,6 @@ describe('universal spawn', () => {
       stdio: 'pipe'
     });
 
-    // @ts-ignore
     // const out = await proc.stdout.text();
 
     proc.stdout.on('data', function (data: string) {

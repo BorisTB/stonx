@@ -1,9 +1,4 @@
-import {
-  joinPathFragments,
-  ProjectConfiguration,
-  TargetConfiguration,
-  Tree
-} from '@nx/devkit';
+import { joinPathFragments, TargetConfiguration } from '@nx/devkit';
 import { NormalizedOptions } from './normalize-options';
 import { libs } from '../../../utils';
 import { BuildExecutorOptions } from '../../../executors/build/schema';
@@ -60,9 +55,3 @@ export function getServeConfig(
     }
   };
 }
-
-export function createTargets(
-  tree: Tree,
-  project: ProjectConfiguration,
-  options: NormalizedOptions
-) {}

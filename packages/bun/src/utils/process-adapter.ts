@@ -88,7 +88,10 @@ export async function killProcess(proc: SpawnResult | null) {
   if (isBunRuntime()) {
     try {
       (proc as Bun.Subprocess).kill();
-    } catch {}
+    } catch (err) {
+      console.log(err);
+    }
+
     return;
   }
 
@@ -100,7 +103,9 @@ export async function killProcess(proc: SpawnResult | null) {
     setTimeout(() => {
       try {
         if (!child.killed) child.kill('SIGKILL');
-      } catch {}
+      } catch (err) {
+        console.log(err);
+      }
       resolve();
     }, 3000);
   });

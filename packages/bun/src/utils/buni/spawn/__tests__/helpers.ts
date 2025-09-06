@@ -7,7 +7,6 @@ let originalBunSpawn: any;
 let originalChildSpawn: any;
 
 export function mockIsBunRuntime(modulePath: string, value: boolean) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const mod = require(modulePath);
   if (originalIsBunRuntime === undefined) {
     originalIsBunRuntime = mod.isBunRuntime;
@@ -17,7 +16,7 @@ export function mockIsBunRuntime(modulePath: string, value: boolean) {
 
 export function restoreIsBunRuntime(modulePath: string) {
   if (originalIsBunRuntime === undefined) return;
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+
   const mod = require(modulePath);
   mod.isBunRuntime = originalIsBunRuntime;
   originalIsBunRuntime = undefined;
@@ -25,32 +24,27 @@ export function restoreIsBunRuntime(modulePath: string) {
 
 export function mockBunSpawn(impl: (opts: any) => any) {
   // Create global Bun if not present
-  // @ts-ignore
   if (typeof globalThis.Bun === 'undefined') {
-    // @ts-ignore
     globalThis.Bun = {} as any;
   }
-  // @ts-ignore
   if (originalBunSpawn === undefined) originalBunSpawn = globalThis.Bun.spawn;
-  // @ts-ignore
   globalThis.Bun.spawn = impl as any;
 }
 
 export function restoreBunSpawn() {
-  // @ts-ignore
   if (originalBunSpawn !== undefined) globalThis.Bun.spawn = originalBunSpawn;
   originalBunSpawn = undefined;
 }
 
 export function mockNodeSpawn(impl: typeof childProc.spawn) {
   if (originalChildSpawn === undefined) originalChildSpawn = childProc.spawn;
-  // @ts-ignore
+  // @ts-expect-error spawn is read only
   childProc.spawn = impl as any;
 }
 
 export function restoreNodeSpawn() {
   if (originalChildSpawn !== undefined) {
-    // @ts-ignore
+    // @ts-expect-error spawn is read only
     childProc.spawn = originalChildSpawn;
   }
   originalChildSpawn = undefined;
